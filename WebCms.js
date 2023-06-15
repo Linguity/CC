@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { Storage } from '@google-cloud/storage';
 import dotenv from 'dotenv';
+import dayjs from 'dayjs'
 
 
 dotenv.config();
@@ -28,20 +29,24 @@ const database = mysql.createConnection({
     limits: {
       fileSize: 5 * 1024 * 1024,
     },
-  }).single('file')
+  }).fields([{ name: 'file' }, { name: 'image' }]);
 
 
 
 export function home(req, res) {
-    const getToken = req.cookies.jswt;
-  
-      jwt.verify(getToken, process.env.SECRETKEY, (err, decoded) => {
-        if(err){
-          res.status(500).json({status: "Error",msg: 'can not access'})
-        }else{
-          res.status(200).json({status: "Success", msg: 'hello admin', id: decoded.id, })
-        }
-      })
+  const getToken = req.cookies.jswt;
+  if (!getToken) {
+    return res.status(401).json({ status: 'Error', msg: 'Unauthorized' });
+  }
+
+  jwt.verify(getToken, process.env.SECRETKEY, (err, decoded) => {
+    if (err) {
+      console.log(error)
+      return res.status(401).json({ status: 'Error', msg: 'Unauthorized' });
+    } else {
+      res.status(200).json({ status: 'Success', msg: 'hello admin', id: decoded.id });
+    }
+  });
 }
 export function countUser(req,res){
     database.query(
@@ -91,6 +96,7 @@ export function loginAdmin(req, res){
     [email], 
     (err, row) => {
     if (err) {
+
       return res.status(500).json({ status: "Error", msg: "Database error" })
     }
     if (row.length === 0) {
@@ -106,7 +112,7 @@ export function loginAdmin(req, res){
           secure: true,
           expires: new Date(Date.now() + 24 * 60 * 60 * 1000)
       })
-      return res.status(200).json({ status: "Succes", msg: "login success" })
+      return res.status(200).cookie("jswt", tokenId).json({ status: "Succes", msg: "login success" })
     } else {
       return res.status(400).json({ status: "Error", msg: "Invalid email or password" })
     }
@@ -154,9 +160,9 @@ export function deleteUser(req,res){
 }
 
 
-export function listTeksAudio(req,res){
+export function listSpelling(req,res){
   database.query(
-      "SELECT * FROM audioteks",
+      "SELECT * FROM spelling",
       (err,row) => {
           if(err){
               res.status(500).json({status: "Error", msg: 'Error get list teks audio'})
@@ -166,18 +172,30 @@ export function listTeksAudio(req,res){
       }
   )
 }
-export function addTeksAudio(req,res){
-  const {teksQuiz, level} = req.body
+export function listPronunciation(req,res){
   database.query(
-      "SELECT * FROM audioteks WHERE teksQuiz = ? ",
-      [teksQuiz],
+      "SELECT * FROM pronunciation",
+      (err,row) => {
+          if(err){
+              res.status(500).json({status: "Error", msg: 'Error get list teks audio'})
+          } else {
+              res.status(200).json({status:"Success", msg:"get list teks audio", row})
+          }
+      }
+  )
+}
+export function addSpelling(req,res){
+  const {text, level} = req.body
+  database.query(
+      "SELECT * FROM spelling WHERE text = ? ",
+      [text],
       (err,result) => {
           if(result.length !== 0){
               return res.status(400).json({status: "Error", msg: "Data Audio already in"})
           }
           database.query(
-              "INSERT INTO audioteks (`teksQuiz`,`level`) VALUES (?,?)",
-              [teksQuiz, level],
+              "INSERT INTO spelling (`text`,`level`) VALUES (?,?)",
+              [text, level],
               (err) => {
                   if(err){
                       console.error(err)
@@ -189,10 +207,49 @@ export function addTeksAudio(req,res){
       }
   )
 }
-export function deleteTeksAudio(req,res){
+
+export function addPronunciation(req,res){
+  const {text, level} = req.body
+  database.query(
+      "SELECT * FROM pronunciation WHERE text = ? ",
+      [text],
+      (err,result) => {
+          if(result.length !== 0){
+              return res.status(400).json({status: "Error", msg: "Data Audio already in"})
+          }
+          database.query(
+              "INSERT INTO pronunciation (`text`,`level`) VALUES (?,?)",
+              [text, level],
+              (err) => {
+                  if(err){
+                      console.error(err)
+                      return res.status(500).json({status: "Error", msg: "error"})
+                  }
+                      return res.status(200).json({status: "Success", msg: "Success imput teks audio"})
+              }
+          )
+      }
+  )
+}
+export function deleteSpelling(req,res){
   const id = req.params.id
   database.query(
-      "DELETE FROM audioteks WHERE id = ?",
+      "DELETE FROM spelling WHERE id = ?",
+      [id],
+      (err,result) => {
+          if(err){
+              res.status(500).json({status : "error", msg: 'Error delete data audio'})
+          }else{
+              res.status(200).json({status: "Success", msg: 'Success Delete Data'})
+          }
+      }
+  )
+}
+
+export function deletePronunciation(req,res){
+  const id = req.params.id
+  database.query(
+      "DELETE FROM pronunciation WHERE id = ?",
       [id],
       (err,result) => {
           if(err){
@@ -210,38 +267,61 @@ export function addArtikel(req,res){
         console.error(err)
       return res.status(500).json({status: "Error", msg: 'Error upload article' })
     }
-    if (!req.file) {
+    if (!req.files || !req.files.file || !req.files.image) {
       return res.status(404).json({ status: "Error", msg: 'No file uploaded' })
     }
-    const gcsname = Date.now() + '-' + Math.round(Math.random() * 1E9)
+    const {title, writerBy} = req.body
+    const date = dayjs().format('YYYY-MM-DD');
+    const contentname = Date.now() + 'content' + Math.round(Math.random() * 1E9)
+    const imagename = Date.now() + 'images' + Math.round(Math.random() * 1E9)
+    
     const bucket = storage.bucket(nameBucket)
-    const fileUpload = bucket.file(gcsname)
-    const up = fileUpload.createWriteStream({
+
+    const contentUpload = bucket.file(contentname)
+    const imageUpload = bucket.file(imagename)
+    
+    const content = contentUpload.createWriteStream({
       metadata: {
-        contentType: req.file.mimetype,
+        contentType: req.files.file[0].mimetype,
       },
     })
-    up.on('error', (err) => {
+    const image = imageUpload.createWriteStream({
+      metadata: {
+        contentType: req.files.image[0].mimetype,
+      },
+    })
+    content.on('error', (err) => {
       return res.status(500).json({ status: "Error", msg: 'Error upload file to GCP' })
     })
-    up.on('finish', () => {
-      const url = `https://storage.googleapis.com/${nameBucket}/${gcsname}`
-      
-      const {title, writerBy} = req.body
-      database.query(
-        "INSERT INTO article (`title`, `writerBy`, `content`) VALUES (?,?,?)", 
-        [title, writerBy, url], 
-        (err) => {
-        if (err) {
-          console.error(err)
-          return res.status(500).json({ status: "Error", msg: 'Error save image' })
-        }
-        return res.status(200).json({ status: "Success", msg: "Success input article"})
-      })
+    image.on('error', (err) => {
+      return res.status(500).json({ status: "Error", msg: 'Error upload file to GCP' })
     })
-    up.end(req.file.buffer)
+    content.on('finish', () => {
+      const contenturl = `https://storage.googleapis.com/${nameBucket}/${contentname}`
+
+      image.on('finish', () => {
+        const imageurl = `https://storage.googleapis.com/${nameBucket}/${imagename}`
+
+        database.query(
+          "INSERT INTO article (`title`, `writerBy`, `date`, `content`, `imageUrl`) VALUES (?,?,?,?,?)",
+          [title, writerBy, date, contenturl, imageurl],
+          (err) => {
+            if (err) {
+              console.error(err)
+              return res.status(500).json({ status: "Error", msg: 'Error save image' })
+            }
+            return res.status(200).json({ status: "Success", msg: "Success input article" })
+          })
+      })
+
+      image.end(req.files.image[0].buffer)
+    })
+
+    content.end(req.files.file[0].buffer)
   })
 }
+
+
 
 
 
@@ -331,3 +411,18 @@ export function addUser(req, res) {
     up.end(req.file.buffer);
   });
 }
+
+export function deleteAdmin(req,res){
+  const id = req.params.id
+  database.query(
+      "DELETE FROM admin WHERE id = ?",
+      [id],
+      (err) => {
+          if(err){
+              res.status(500).json({status: "Error", msg: 'Error delete data'})
+          }else{
+              res.status(200).json({status: "Success", msg: 'Success Delete Data'})
+          }
+      }
+  )
+} ////revisi
