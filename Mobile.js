@@ -334,11 +334,16 @@ export function postSpellingById(req, res) {
           async function sendToML(url, teks_quiz) {
             try {
               const mlUrl = 'https://linguitymlspellapi-djq5jpbe4a-et.a.run.app/spelling';
-              const requestBody = {
+              const requestBody = JSON.stringify({
                 file: url,
                 label: teks_quiz,
+              });
+              customConfig = {
+                headers: {
+                  'Content-Type': 'application/json'
+                }
               };
-              const response = await axios.post(mlUrl, requestBody);
+              const response = await axios.post(mlUrl, requestBody, customConfig);
 
               return response.data.checkk;
             } catch (error) {
