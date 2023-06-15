@@ -1,6 +1,6 @@
 import express from 'express';
-import { addadmin, loginAdmin, logoutAdmin, home, countUser, listAdmin, listUser, deleteUser, addTeksAudio, deleteTeksAudio, listartikel, addArtikel, deleteArticle, listTeksAudio, addUser } from './WebCms.js';
-import { register, login, user,  insertName, randomQuizByLevelChooseOne, randomQuizByLevel,  uploadimage, articleview, randomQuizById } from './Mobile.js';
+import { addadmin, loginAdmin, logoutAdmin, home, countUser, listAdmin, listUser, deleteUser,   listartikel, addArtikel, deleteArticle,  addUser, deleteAdmin, addSpelling, addPronunciation, listSpelling, listPronunciation, deleteSpelling, deletePronunciation } from './WebCms.js';
+import { register, login, user,  insertName,   uploadimage, articleview, articleviewsearch, spellingListBylevel, PronunciationListBylevel, SpellingListById, PronunciationListById, postSpellingById } from './Mobile.js';
 
 
 const routes= express.Router();
@@ -13,17 +13,21 @@ routes.post('/addadmin', addadmin)
 routes.post('/loginAdmin', loginAdmin)
 routes.delete('/logoutAdmin', logoutAdmin)
 routes.get('/listadmin', listAdmin)
+routes.get('/deleteadmin', deleteAdmin) ///revisi
 
 
 routes.get('/listuser', listUser)
 routes.delete('/deleteUser/:id', deleteUser)
 routes.post('/addUser', addUser)
 
-routes.get('/listTeksAudio', listTeksAudio)
-routes.post('/addTeksAudio', addTeksAudio)
-routes.delete('/deleteTeksAudio/:id', deleteTeksAudio)
+routes.get('/listSpelling', listSpelling)
+routes.get('/listPronunciation', listPronunciation)
+routes.post('/addSpelling', addSpelling)
+routes.post('/addPronunciation', addPronunciation)
+routes.delete('/deleteSpelling/:id', deleteSpelling)
+routes.delete('/deletePronunciation/:id', deletePronunciation)
 
-routes.get('/listartikel', listartikel)
+
 routes.post('/addArtikel', addArtikel)
 routes.delete('/deleteArtikel/:id', deleteArticle)
 
@@ -33,9 +37,13 @@ routes.post('/login', login)
 routes.get('/user/:id', user)
 routes.put('/uploadImage/:id', uploadimage)
 routes.put('/insertName/:id', insertName)
-routes.get('/artikel/:id', articleview)
-routes.get('/randomQuizByLevelChooseOne/:level', randomQuizByLevelChooseOne)
-routes.get('/randomQuizByLevel/:level', randomQuizByLevel)
-routes.get('/randomQuizById/:id', randomQuizById)
+routes.get('/articleById/:id', articleview)
+routes.get('/articleSearch/:title', articleviewsearch)
+routes.get('/listArticle', listartikel)
+routes.get('/spellingListByLevel/:level', spellingListBylevel)
+routes.get('/pronunciationListByLevel/:level', PronunciationListBylevel)
+routes.get('/spellingListById/:id', SpellingListById)
+routes.get('/pronunciationListById/:id', PronunciationListById)
+routes.post('/checkSpelling/:id', postSpellingById, login)
 
 export default routes;
