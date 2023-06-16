@@ -28,8 +28,6 @@ https://linguityapi-djq5jpbe4a-et.a.run.app/insertName/:id Insert Name User
 
 https://linguityapi-djq5jpbe4a-et.a.run.app/listTeksAudio List Teks Audio
 
-https://linguityapi-djq5jpbe4a-et.a.run.app/user/:id Data User By Id
-
 https://linguityapi-djq5jpbe4a-et.a.run.app/articleSearch/:title Article Search By Title
 
 https://linguityapi-djq5jpbe4a-et.a.run.app/listArticle List Article
