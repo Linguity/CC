@@ -1,4 +1,4 @@
-# Linguity - Cloud Computing
+# Linguity App - Cloud Computing
 
 ##  Bangkit Capstone Project 2023 
 Bangkit Capstone Team ID : C23-PS299
@@ -22,9 +22,9 @@ https://linguityapi-djq5jpbe4a-et.a.run.app/register Register User
 
 https://linguityapi-djq5jpbe4a-et.a.run.app/login Login User
 
-https://linguityapi-djq5jpbe4a-et.a.run.app/uploadImage/1 Upload Image
+https://linguityapi-djq5jpbe4a-et.a.run.app/uploadImage/:id Upload Image
 
-https://linguityapi-djq5jpbe4a-et.a.run.app/insertName/1 Insert Name User
+https://linguityapi-djq5jpbe4a-et.a.run.app/insertName/:id Insert Name User
 
 https://linguityapi-djq5jpbe4a-et.a.run.app/listTeksAudio List Teks Audio
 
