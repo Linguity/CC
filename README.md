@@ -16,6 +16,37 @@ https://linguitymlspellapi-djq5jpbe4a-et.a.run.app/spelling Spelling Prediction 
 
 https://linguitymlappi-djq5jpbe4a-et.a.run.app/predict Pronunciation Prediction API
 
+## Postmant Documentation API
+
+https://linguityapi-djq5jpbe4a-et.a.run.app/register Register User
+
+https://linguityapi-djq5jpbe4a-et.a.run.app/login Login User
+
+https://linguityapi-djq5jpbe4a-et.a.run.app/uploadImage/1 Upload Image
+
+https://linguityapi-djq5jpbe4a-et.a.run.app/insertName/1 Insert Name User
+
+https://linguityapi-djq5jpbe4a-et.a.run.app/listTeksAudio List Teks Audio
+
+https://linguityapi-djq5jpbe4a-et.a.run.app/user/:id Data User By Id
+
+https://linguityapi-djq5jpbe4a-et.a.run.app/articleSearch/:title Article Search By Title
+
+https://linguityapi-djq5jpbe4a-et.a.run.app/listArticle List Article
+
+https://linguityapi-djq5jpbe4a-et.a.run.app/articleById/:id Article By Id
+
+https://linguityapi-djq5jpbe4a-et.a.run.app/spellingListByLevel/:level Spelling List By Level
+
+https://linguityapi-djq5jpbe4a-et.a.run.app/pronunciationListByLevel/:level Pronunciation List By Level
+
+https://linguityapi-djq5jpbe4a-et.a.run.app/spellingListById/:id Spelling List By Id
+
+https://linguityapi-djq5jpbe4a-et.a.run.app/pronunciationListById/:id Pronunciation List By Id
+
+https://linguityapi-djq5jpbe4a-et.a.run.app/checkSpelling/:id Check Spelling
+
+https://linguityapi-djq5jpbe4a-et.a.run.app/checkPronunciation/:id Check Pronunciation
 ## Cloud Architecture
 ![DIAGRAM GOOGLE CLOUD](https://github.com/Linguity/CC/assets/85879078/61f4159e-d6eb-4c71-997f-fb96aaad740d)
 
