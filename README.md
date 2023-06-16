@@ -1,3 +1,5 @@
+Linguity - Cloud Computing
+
 API description
 
 API documentation Endpoint
