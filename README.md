@@ -6,7 +6,7 @@ Bangkit Capstone Team ID : C23-PS299
 Here is our repository for Bangkit 2023 Capstone project - Cloud Computing
 
 ## API description
-This is source code API of the Linguity team to make the CRUD (Create, Read, Update and Delete) method that is used by our Linguity Application. This API is built using  MySql, Express.js, React.js, Vite.js and Node.js. We deploy this API in Cloud RUN and use Cloud SQL as a database.
+This is source code API of the Linguity team to make the CRUD (Create, Read, Update and Delete) method that is used by our Linguity Application. This API is built using  MySql, Express.js, React.js, Vite.js and Node.js. We deploy this API in Cloud RUN, use storage with Cloud Storage and use Cloud SQL as a database.
 
 # API documentation Endpoint
 ## API link to endpoint
