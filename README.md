@@ -57,3 +57,4 @@ https://linguityapi-djq5jpbe4a-et.a.run.app/checkPronunciation/:id Check Pronunc
 - docker run -p 8090:8090 <Your-image>:<your-tag>
 - docker tag <Your-image>:<your-tag> gcr.io/<your-project>/<Your-image>:<your-tag>
 - docker push gcr.io/<your-project>/<Your-image>:<your-tag>
+3. Then Deploy to Cloud Run
